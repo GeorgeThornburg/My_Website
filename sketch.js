@@ -1,9 +1,14 @@
 let wWidth, wHeight;
 let x = 50, y = 50;
-let xHomex = 335, yHomey = 290;
-let gWidth = 50, gHeight = 100;
+//let xHomex = 335, yHomey = 290;
+//let gWidth = 50, gHeight = 100;
 let gif_stand_still, gif_walk_right, gif_walk_away, gif_walk_left, gif_walk_towards, home_door_closed;
 let dX = 350, dY = 460, dW = 150, dH = 50;
+let MoonWalk = false;
+let LeftWalk = false;
+let RightWalk = false;
+let FrontWalk = false;
+let AwayWalk = false;
 
 
 function preload() {
@@ -20,7 +25,7 @@ function preload() {
   about_door_closed = loadImage('images/about_door_closed.png');
   about_door_open = loadImage('images/about_door_open.png');
   contact_black = loadImage('images/contact_me_black.png');
-  contact_white = loadImage('images/contact_me_black.png');
+  contact_white = loadImage('images/contact_me_white.png');
   fountain = loadImage('images/fountain.gif');
   GetCoor();
 
@@ -61,16 +66,39 @@ function draw() {
   Boundaries();
   Movement();
   // rectangle around 'home'
-  rect(wWidth*.19, wHeight*.33, wWidth*.107, wHeight*.208);
-  // rectangle below 'home' - hit box
-  rect(wWidth*.19, wHeight*.54, wWidth*.107, wHeight*.04);
+/*   rect(wWidth*.19, wHeight*.33, wWidth*.107, wHeight*.208);
+  // rectangle around 'fountain'
+  rect(wWidth*.429, wHeight*.33, wWidth*.152, wHeight*.188);
+  // rectangle around 'projects'
+  rect(wWidth*.342, wHeight*.055, wWidth*.126, wHeight*.199);
   //rectangle around 'guy'
   rect(x, y, wWidth*.025, wHeight*.1);
+  // rectangle around 'About'
+  rect(wWidth*.54, wHeight*.047, wWidth*.11, wHeight*.204);
+  // rectangle around 'Contact Me'
+  rect(wWidth*.701, wHeight*.295, wWidth*.127, wHeight*.25);
+  
+  
   //rectangle below 'guy' - hit box
   rect(x, y+(wHeight*.1), wWidth*.025, wHeight*.01);
+  //rectangle below 'projects' - hit box
+  rect(wWidth*.342, wHeight*.250, wWidth*.126, wHeight*.04);
+  // rectangle below 'home' - hit box
+  rect(wWidth*.19, wHeight*.54, wWidth*.107, wHeight*.04);
+  // rectangle below - 'About' - hit box
+  rect(wWidth*.54, wHeight*.251, wWidth*.11, wHeight*.04);
+  // rectangle around 'Contact Me' - hit
+  rect(wWidth*.701, wHeight*.545, wWidth*.127, wHeight*.04);
+  // rectangle around 'Jackson Highway' - hit
+  rect(0, wHeight*.735, wWidth, wHeight*.135); */
+  Layers();
 }
 
 function Boundaries() {
+  image(home_door_closed, wWidth*.17, wHeight*.3);
+  image(projects_door_closed, wWidth*.33, wHeight*.005);
+  image(about_door_closed, wWidth*.52, wHeight*.0);
+  image(contact_black, wWidth*.69, wHeight*.27);
   //screen boundaries for 'guy'
   if (x < 0) {                                                                                       //left wall
     x = x + 2;
@@ -82,57 +110,215 @@ function Boundaries() {
     y = y - 2;
   }
 
-  if (((x + wWidth*.025) > wWidth*.19) && ((x + wWidth*.025)< wWidth*.193) && (y > wHeight*.33) && (y < wHeight*.208)){                //left side of house
-    x = x - 2;
-  }  else if ((y < yHomey - 90) && (y > yHomey - 103) && (x + 50 > xHomex) && (x < xHomex + 175)){             //top of house
-    y = y - 2;
-  } else if ((y > yHomey) && (y < yHomey + 101) && (x + 50 > xHomex) && (x < xHomex + 175)){                   //bottom of house
-    y = y + 2;                
-  } else if ((x + 50 < xHomex + 233) && (x + 50 > xHomex) && (y > yHomey - 100) && (y < yHomey + 85)){         //bottom of house
-    x = x + 2;  
-  }
 
-  if ( x + (wWidth*.025) >= wWidth*.19 && x <= wWidth*.107 && 
-       y + (wHeight*.1) >= wHeight*.54 && y <= wHeight*.04){   //controls access to HOME
+
+
+if (
+  x < (wWidth * 0.19 + wWidth * 0.107) &&
+  (x + wWidth * 0.025) > (wWidth * 0.19) &&
+  (y + wHeight * 0.1) < (wHeight * 0.54 + wHeight * 0.04) &&
+  (y + wHeight * 0.1 + wHeight * 0.01) > (wHeight * 0.54)
+){   //controls access to HOME
 
     image(home_door_open, wWidth*.17, wHeight*.3);
     if(keyIsDown(UP_ARROW) === true){
-      window.location.href = "resume.html";
+      window.location.href = "home.html";
     } else {
       //skip
     }
+  } else if (
+      (
+  x < (wWidth * 0.342 + wWidth * 0.126) &&
+  (x + wWidth * 0.025) > (wWidth * 0.342) &&
+  (y + wHeight * 0.1) < (wHeight * 0.250 + wHeight * 0.04) &&
+  (y + wHeight * 0.1 + wHeight * 0.01) > (wHeight * 0.250)
+)
+  ){
+      image(projects_door_open, wWidth*.33, wHeight*.005);
+      if(keyIsDown(UP_ARROW) === true){
+        window.location.href = "projects.html";
+      } else {
+        //skip
+      }
+  } else if (
+      (
+
+  x < (wWidth * 0.54 + wWidth * 0.11) &&
+  (x + wWidth * 0.025) > (wWidth * 0.54) &&
+  (y + wHeight * 0.1) < (wHeight * 0.251 + wHeight * 0.04) &&
+  (y + wHeight * 0.1 + wHeight * 0.01) > (wHeight * 0.251)
+
+)
+  ){
+      image(about_door_open, wWidth*.52, wHeight*.0);
+      if(keyIsDown(UP_ARROW) === true){
+        window.location.href = "about.html";
+      } else {
+        //skip
+      }
+  } else if (
+      (
+
+  x < (wWidth * 0.701 + wWidth * 0.127) &&
+  (x + wWidth * 0.025) > (wWidth * 0.701) &&
+  (y + wHeight * 0.1) < (wHeight * 0.545 + wHeight * 0.04) &&
+  (y + wHeight * 0.1 + wHeight * 0.01) > (wHeight * 0.545)
+
+)
+  ){
+      image(contact_white, wWidth*.69, wHeight*.27);
+      if(keyIsDown(UP_ARROW) === true){
+        window.location.href = "contact.html";
+      } else {
+        //skip
+      }
+  } else if (
+      (
+
+  x < (0 + wWidth) &&
+  (x + wWidth * 0.025) > 0 &&
+  (y + wHeight * 0.1) < (wHeight * 0.735 + wHeight * 0.135) &&
+  (y + wHeight * 0.1 + wHeight * 0.01) > (wHeight * 0.735)
+
+)
+  ){
+    MoonWalk = true;
   } else {
-    image(home_door_closed, wWidth*.17, wHeight*.3);
-    image(projects_door_closed, wWidth*.33, wHeight*.005);
-    image(about_door_closed, wWidth*.52, wHeight*.0);
-    image(contact_black, wWidth*.69, wHeight*.27);
+    MoonWalk = false;
   }
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 function Movement(){
-  if (keyIsDown(LEFT_ARROW) === true) {
-    x = x - 2;
-    image(gif_walk_left, x, y);
-  } else if (keyIsDown(RIGHT_ARROW) ===true )  {
-    x = x + 2;
-    image(gif_walk_right, x, y);
-  } else if (keyIsDown(UP_ARROW) === true) {
-    y = y - 2;
-    image(gif_walk_away, x, y);
-    SaveToServer();
-  } else if (keyIsDown(DOWN_ARROW) === true) {
-    y = y + 2;
-    image(gif_walk_towards, x, y);
-    SaveToServer();
+  
+// Collision with fountain
+let collision = (
+  x < (wWidth * 0.429 + wWidth * 0.152) &&
+  (x + wWidth * 0.025) > (wWidth * 0.429) &&
+  y < (wHeight * 0.33 + wHeight * 0.1) &&
+  (y + wHeight * 0.1) > (wHeight * 0.33)
+) ||
+// Collision with Home  
+(
+  x < (wWidth * 0.19 + wWidth * 0.107) &&
+  (x + wWidth * 0.025) > (wWidth * 0.19) &&
+  y < (wHeight * 0.33 + wHeight * 0.1) &&
+  (y + wHeight * 0.1) > (wHeight * 0.33)
+) ||
+// Collision with Projects 
+( 
+  x < (wWidth * 0.342 + wWidth * 0.126) &&
+  (x + wWidth * 0.025) > (wWidth * 0.342) &&
+  y < (wHeight * 0.055 + wHeight * 0.1) &&
+  (y + wHeight * 0.1) > (wHeight * 0.055)
+) ||
+// Collision with About
+( 
+  x < (wWidth * 0.54 + wWidth * 0.11) &&
+  (x + wWidth * 0.025) > (wWidth * 0.54) &&
+  y < (wHeight * 0.047 + wHeight * 0.1) &&
+  (y + wHeight * 0.1) > (wHeight * 0.047)  
+) ||
+// Collision with Contact Me
+(  
+  x < (wWidth * 0.701 + wWidth * 0.127) &&
+  (x + wWidth * 0.025) > (wWidth * 0.701) &&
+  y < (wHeight * 0.295 + wHeight * 0.13) &&
+  (y + wHeight * 0.1) > (wHeight * 0.295)
+);
+
+
+  if (!collision){
+    if (MoonWalk){ 
+      if (keyIsDown(LEFT_ARROW) === true) {
+        x = x - 2;
+        image(gif_walk_right, x, y);
+      } else if (keyIsDown(RIGHT_ARROW) ===true )  {
+        x = x + 2;
+        image(gif_walk_left, x, y);
+      } else if (keyIsDown(UP_ARROW) === true) {
+        y = y - 2;
+        image(gif_walk_towards, x, y);
+        SaveToServer();
+      } else if (keyIsDown(DOWN_ARROW) === true) {
+        y = y + 2;
+        image(gif_walk_away, x, y);
+        SaveToServer();
+      } else {
+        image(gif_stand_still, x, y);
+      }
+    } else {
+        if (keyIsDown(LEFT_ARROW) === true && !LeftWalk) {
+          x = x - 2;
+          image(gif_walk_left, x, y);
+          RightWalk = false;
+          FrontWalk = false;
+          AwayWalk = false;
+          SaveToServer();
+        } else if (keyIsDown(RIGHT_ARROW) ===true && !RightWalk)  {
+          x = x + 2;
+          image(gif_walk_right, x, y);
+          LeftWalk = false;
+          FrontWalk = false;
+          AwayWalk = false;
+          SaveToServer();
+        } else if (keyIsDown(UP_ARROW) === true && !AwayWalk) {
+          y = y - 2;
+          image(gif_walk_away, x, y);
+          FrontWalk = false;
+          LeftWalk = false;
+          RightWalk = false;
+          SaveToServer();
+        } else if (keyIsDown(DOWN_ARROW) === true && !FrontWalk) {
+          y = y + 2;
+          image(gif_walk_towards, x, y);
+          AwayWalk = false;
+          LeftWalk = false;
+          RightWalk = false;
+          SaveToServer();
+        } else {
+          image(gif_stand_still, x, y);
+        }
+    }
   } else {
-    image(gif_stand_still, x, y);
+          if (keyIsDown(LEFT_ARROW) === true) {
+        x = x + 4;
+        image(gif_walk_left, x, y);
+        LeftWalk = true;
+      } else if (keyIsDown(RIGHT_ARROW) ===true)  {
+        x = x - 4;
+        image(gif_walk_right, x, y);
+        RightWalk = true;
+      } else if (keyIsDown(UP_ARROW) === true) {
+        y = y + 4;
+        image(gif_walk_away, x, y);
+        AwayWalk = true;
+      } else if (keyIsDown(DOWN_ARROW) === true) {
+        y = y - 4;
+        image(gif_walk_towards, x, y);
+        FrontWalk = true;
+      } else {
+        image(gif_stand_still, x, y);
+      }
   }
   
-}
+} 
+
+
 
 
 
@@ -188,7 +374,13 @@ function GetCoor(){
 
 
 
-
+function Layers() {
+  if(y < wHeight*.3){
+    image(fountain, wWidth*.43, wHeight*.22);
+  }else{
+    //skip
+  };
+}
 
  
 
